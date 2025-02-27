@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,8 +23,9 @@ import java.util.ArrayList;
 
 public class ReservationFragment extends Fragment {
 
-
-
+    Button bDeleteAll;
+    ImageView iEmpty;
+    TextView tEmpty;
     FloatingActionButton fab;
     RecyclerView rc;
     customAdapter adapter;
@@ -40,6 +43,18 @@ public class ReservationFragment extends Fragment {
         fab = view.findViewById(R.id.fab);
         rc = view.findViewById(R.id.rc);
 
+        iEmpty = view.findViewById(R.id.iEmpty);
+        tEmpty = view.findViewById(R.id.tEmpty);
+        bDeleteAll = view.findViewById(R.id.bDeleteAll);
+
+
+        bDeleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBHelper dbHelper = new DBHelper(getContext());
+                dbHelper.deleteAll();
+            }
+        });
 
         storeInArray();
         adapter = new customAdapter(getContext(),id,name,person,date,timestamp);
@@ -67,6 +82,8 @@ public class ReservationFragment extends Fragment {
 
         if (cursor.getCount()==0){
             Toast.makeText(getContext(), "no data", Toast.LENGTH_SHORT).show();
+            tEmpty.setVisibility(getView().VISIBLE);
+            iEmpty.setVisibility(getView().VISIBLE);
         }else {
             while(cursor.moveToNext()){
                 id.add(cursor.getString(0));
@@ -74,7 +91,8 @@ public class ReservationFragment extends Fragment {
                 person.add(cursor.getString(2));
                 date.add(cursor.getString(3));
                 timestamp.add(cursor.getString(4));
-
+                tEmpty.setVisibility(getView().GONE);
+                iEmpty.setVisibility(getView().GONE);
 
             }
         }
